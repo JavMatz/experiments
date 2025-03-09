@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import argparse
+import shutil
 import subprocess
 import os
-import json
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC, TIT2, TRCK, TPE1, TALB, TDRC
 from yt_dlp import YoutubeDL
@@ -102,4 +102,4 @@ audio.tags.add(
 audio.save()
 
 dest_file = ' - '.join(file_name)
-os.system('cp '+video_title+'.mp3 "/home/javier/'+dest_file+'.mp3"')
+shutil.copy(video_title+'.mp3', '/home/javier/'+dest_file+'.mp3')
