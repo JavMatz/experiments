@@ -8,7 +8,10 @@ from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC, TIT2, TRCK, TPE1, TALB, TDRC
 from yt_dlp import YoutubeDL
 
+# Will be useful later
 file_name = []
+
+# Parse CLI arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--URL', help='The YT url to get the track')
 parser.add_argument('-T','--track', help='The track number of the track', default='')
@@ -18,7 +21,7 @@ parser.add_argument('-A','--album', help='The album of the track', default='')
 parser.add_argument('-c','--cover', help='The cover art of the track', default='')
 args = parser.parse_args()
 
-# Just get the video title
+## This part is just to get the video title
 with YoutubeDL() as ydl:
     info_dict = ydl.extract_info(args.URL, download=False)
     video_title = info_dict.get('title')
@@ -30,6 +33,7 @@ os.chdir(os.path.abspath(TMP_DIR.stdout.strip('\n')))
 # Download the thing + thumbnail
 subprocess.run(['yt-dlp', '-o', '%(title)s', '--embed-metadata', '--ignore-errors', '--extract-audio','--audio-quality', '192K', '--audio-format', 'mp3', '--write-thumbnail',  args.URL])
 
+# Add audio tags
 audio = MP3(video_title+'.mp3', ID3=ID3)    
 
 # HACK: Delete RecordingTime tag that breaks Amberol music player when it tries
@@ -41,6 +45,7 @@ audio.tags.add(
             )
         )
 
+# Track number
 if args.track != '':
     file_name.append(args.track)
     audio.tags.add(
@@ -51,6 +56,7 @@ if args.track != '':
         )
     )
 
+# Album
 if args.album != '':
     file_name.append(args.album)
     audio.tags.add(
@@ -61,6 +67,7 @@ if args.album != '':
         )
     )
 
+# Artist
 if args.artist != '':
     file_name.append(args.artist)
     audio.tags.add(
@@ -71,6 +78,7 @@ if args.artist != '':
         )
     )
 
+# Track title
 if args.title != '':
     file_name.append(args.title)
     audio.tags.add(
@@ -81,6 +89,7 @@ if args.title != '':
         )
     )
 
+# Cover art
 if args.cover != '':
     # Use provided file for cover art
     cover_art = args.cover
