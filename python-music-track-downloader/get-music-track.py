@@ -110,9 +110,18 @@ audio.tags.add(
 
 audio.save()
 
-dest_path = ['home', 'javier', 'Music', args.artist, args.album]
+if args.artist and args.album:
+    dest_path = ['home', 'javier', 'Music', args.artist, args.album]
+else:
+    dest_path = ['home', 'javier', 'Music']
+
 dest_path = '/'.join(dest_path)
 dest_path = '/'+dest_path+'/'
 os.makedirs(dest_path, exist_ok=True)
-dest_file = ' - '.join(file_name)
+
+if file_name: 
+    dest_file = ' - '.join(file_name)
+else:
+    dest_file = video_title
+
 shutil.copy(video_title+'.mp3', dest_path+dest_file+'.mp3')
